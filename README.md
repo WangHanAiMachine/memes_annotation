@@ -10,7 +10,9 @@ Lourie, Hannah Rashkin, Brendan Roof, Noah A Smith, and Yejin Choi. [Atomic: An 
 
 - [x] *Roemmele, M., Bejan, C. A., & Gordon, A. S. [Choice of Plausible Alternatives: An Evaluation of Commonsense Causal Reasoning.](https://www.researchgate.net/profile/Cosmin-Bejan/publication/221251392_Choice_of_Plausible_Alternatives_An_Evaluation_of_Commonsense_Causal_Reasoning/links/5c129b024585157ac1c05c6e/Choice-of-Plausible-Alternatives-An-Evaluation-of-Commonsense-Causal-Reasoning.pdf) In AAAI spring symposium: logical formalizations of commonsense reasoning (pp. 90-95).
 
+- [x] *Auer, S., Bizer, C., Kobilarov, G., Lehmann, J., Cyganiak, R., & Ives, Z. [Dbpedia: A nucleus for a web of open data.](https://link.springer.com/content/pdf/10.1007/978-3-540-76298-0_52.pdf) In The semantic web (pp. 722-735). Springer, Berlin, Heidelberg.
 
+- [x] Nickel, M., Rosasco, L., & Poggio, T. [Holographic embeddings of knowledge graphs.](https://arxiv.org/pdf/1510.04935.pdf) In Proceedings of the AAAI Conference on Artificial Intelligence (Vol. 30, No. 1).
 
 
 - [x] *Zou, X.* [A survey on application of knowledge graph. In Journal of Physics: Conference Series](https://iopscience.iop.org/article/10.1088/1742-6596/1487/1/012016/pdf) IOP Publishing.
