@@ -2,12 +2,12 @@
 ## Reading Lists
 
 ### Knowledge Base Construction
-[x] *Bosselut, Antoine, et al.* [COMET: Commonsense transformers for automatic knowledge graph construction](https://arxiv.org/pdf/1906.05317) ACL'2019
+[x] *Bosselut, Antoine, et al.* [COMET: Commonsense transformers for automatic knowledge graph construction](https://arxiv.org/pdf/1906.05317) ACL'2019 [Slides Link](https://docs.google.com/presentation/d/1uBwNkusg8EPCqyuWJUfMnRB1-sc2gAb5-v11oz5mJzU/edit?usp=sharing)
 
-[x] Robyn Speer, Joshua Chin, and Catherine Havasi.* [Conceptnet 5.5: An open multilingual graph of general knowledge.](https://arxiv.org/pdf/1612.03975.pdf) In Thirty-First AAAI Conference on Artificial Intelligence
+[x] Robyn Speer, Joshua Chin, and Catherine Havasi.* [Conceptnet 5.5: An open multilingual graph of general knowledge.](https://arxiv.org/pdf/1612.03975.pdf) In Thirty-First AAAI Conference on Artificial Intelligence [Slides Link](https://docs.google.com/presentation/d/1VafO0tqyxLhZFJvExc_Tm1bBvPAkcNHUwLUGoSTKW2E/edit?usp=sharing)
 
 [x] *Maarten Sap, Ronan LeBras, Emily Allaway, Chandra Bhagavatula, Nicholas
-Lourie, Hannah Rashkin, Brendan Roof, Noah A Smith, and Yejin Choi.* [Atomic: An atlas of machine commonsense for ifthen reasoning.](https://ojs.aaai.org/index.php/AAAI/article/view/4160) In AAAI.
+Lourie, Hannah Rashkin, Brendan Roof, Noah A Smith, and Yejin Choi.* [Atomic: An atlas of machine commonsense for ifthen reasoning.](https://ojs.aaai.org/index.php/AAAI/article/view/4160) In AAAI. [Slides Link](https://docs.google.com/presentation/d/1VafO0tqyxLhZFJvExc_Tm1bBvPAkcNHUwLUGoSTKW2E/edit?usp=sharing)
 
 [] *Auer, S., Bizer, C., Kobilarov, G., Lehmann, J., Cyganiak, R., & Ives, Z.* [Dbpedia: A nucleus for a web of open data.](https://link.springer.com/content/pdf/10.1007/978-3-540-76298-0_52.pdf) In The semantic web (pp. 722-735). Springer, Berlin, Heidelberg.
 
