@@ -22,3 +22,7 @@ Lourie, Hannah Rashkin, Brendan Roof, Noah A Smith, and Yejin Choi.* [Atomic: An
 
 ### Knowledge Base Embeddings
 [] Nickel, M., Rosasco, L., & Poggio, T.* [Holographic embeddings of knowledge graphs.](https://arxiv.org/pdf/1510.04935.pdf) In Proceedings of the AAAI Conference on Artificial Intelligence (Vol. 30, No. 1).
+
+### Entity linking
+- [DeepType: Multilingual Entity Linking by Neural Type System Evolution](https://arxiv.org/pdf/1802.01021.pdf)
+- [Evaluating the Impact of Knowledge Graph Context on Entity Disambiguation Models](https://arxiv.org/pdf/2008.05190.pdf)
