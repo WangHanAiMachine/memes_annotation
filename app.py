@@ -167,7 +167,6 @@ def questionPage():
     return redirect(url_for('notAvaiablePage'))
 
 
-
 @app.route('/endPage/<surveyCode>', methods = ['GET','POST'])
 def endPage(surveyCode):
     return render_template('endPage.html', surveyCode=surveyCode)
@@ -178,7 +177,6 @@ def wrongAnswerPage():
 
 @app.route('/notAvaiablePage')
 def notAvaiablePage():
-    
     return render_template('notAvaiablePage.html')
 
 def sampleQuestion():
@@ -278,10 +276,6 @@ def closeSurvey(tweetId, strategyId, annotationId):
     conn.commit()
     conn.close()
 
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 def checkProgress(request, strategyId):
     if(str(strategyId) == "1"):
@@ -309,6 +303,12 @@ def checkTimeOut():
             
             closeSurvey(tweetId, strategyId, annotationId)
     conn.close()
+
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+    
 with app.app_context():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=30) # check

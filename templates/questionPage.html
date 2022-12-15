@@ -3,26 +3,6 @@
 {% block content %}
 
 <form method="Post">
-    <script>
-        var countDownDate = '{{startTime}}';
-        countDownDate = (parseInt(countDownDate) + 30 * 60 ) * 1000
-        var x = setInterval(function() {
-    
-            var now = new Date().getTime();
-    
-            var distance = countDownDate - now;
-    
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-            document.getElementById("timer").innerHTML = "Time left: " + minutes + "m " + seconds + "s ";
-    
-            if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("timer").innerHTML = "EXPIRED";
-            }
-        }, 1000);
-        </script>
     
     <div class="top-container">
         {% for message in get_flashed_messages() %}
@@ -36,7 +16,7 @@
             <div class="question ml-sm-5 pl-sm-5 pt-2">
                 <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
                 {% if strategyId|int != 1 %}
-                    <a id="expCollapseBtn" href="#demo" class="btn btn-info" data-toggle="collapse">Click here to view explanation</a>
+                    <a href="#demo" class="btn btn-info" data-toggle="collapse" onClick="javascript:toggle(this);">Click here to view explanation</a>
                     <div id="demo" class="collapse">
                         {% if strategyId == '6' or strategyId == '7' %}
                             <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
@@ -282,11 +262,30 @@
             </div>
         </div>
         <script>
-            function handleClick()
-            {
-                this.value = (this.value == 'Click here to view explanation' ? 'Click here to hide explanation' : 'Click here to view explanation');
+             var countDownDate = '{{startTime}}';
+            countDownDate = (parseInt(countDownDate) + 30 * 60 ) * 1000
+            var x = setInterval(function() {
+        
+                var now = new Date().getTime();
+        
+                var distance = countDownDate - now;
+        
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+                document.getElementById("timer").innerHTML = "Time left: " + minutes + "m " + seconds + "s ";
+        
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("timer").innerHTML = "EXPIRED";
+                }
+            }, 1000);
+
+
+            function toggle(lnk_obj){
+                    lnk_obj.innerHTML = (lnk_obj.innerHTML == 'Click here to view explanation') ? 'Click here to hide explanation' : 'Click here to view explanation' ;
             }
-            document.getElementById('expCollapseBtn').onclick=handleClick;
+
 
             window.onscroll = function() {myFunction()};
             var header = document.getElementById("myHeader");
@@ -299,6 +298,7 @@
                 header.classList.remove("sticky");
               }
             }
+
             var fluency = '{{fluency}}';  
             var informativeness = '{{informativeness}}';  
             var persuasiveness = '{{persuasiveness}}';  
