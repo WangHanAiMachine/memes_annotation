@@ -1,56 +1,55 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <form method="Post">
-    <div class="container">
+    <script>
+        var countDownDate = '{{startTime}}';
+        countDownDate = (parseInt(countDownDate) + 30 * 60 ) * 1000
+        var x = setInterval(function() {
+    
+            var now = new Date().getTime();
+    
+            var distance = countDownDate - now;
+    
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+            document.getElementById("timer").innerHTML = "Time left: " + minutes + "m " + seconds + "s ";
+    
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("timer").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+        </script>
+    
+    <div class="top-container">
         {% for message in get_flashed_messages() %}
             <div class="alert alert-danger">{{ message }}</div>
         {% endfor %}
     </div>
+   
+    <div class="header" id="myHeader">
+        <div id="timer" class="py-2 h5">Time left: 30m 00s </div>
 
-    <div id="timer" class="py-2 h5"></div>
-
-    <script>
-    var countDownDate = '{{startTime}}';
-    countDownDate = (parseInt(countDownDate) + 30 * 60 ) * 1000
-
-// Update the count down every 1 second
-    var x = setInterval(function() {
-
-    // Get today's date and time
-        var now = new Date().getTime();
-
-        // Find the distance between now and the count down date
-        var distance = countDownDate - now;
-
-        // Time calculations for days, hours, minutes and seconds
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Display the result in the element with id="demo"
-        document.getElementById("timer").innerHTML = "Time left: " + minutes + "m " + seconds + "s ";
-
-        // If the count down is finished, write some text
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("timer").innerHTML = "EXPIRED";
-        }
-    }, 1000);
-    </script>
-    
-    <div class="container mt-sm-5 my-1">
-        <div class="question ml-sm-5 pl-sm-5 pt-2">
-            <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
-            {% if strategyId|int != 1 %}
-                {% if strategyId == '6' or strategyId == '7' %}
-                    <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
-                    <div class="py-2 h5" id="explanation2"><b>Explanation2: {{explanation2}}</b></div>
-                {% else %}
-                    <div class="py-2 h5" id="explanation"><b>Explanation: {{explanation}}</b></div>
+            <div class="question ml-sm-5 pl-sm-5 pt-2">
+                <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
+                {% if strategyId|int != 1 %}
+                    <a id="expCollapseBtn" href="#demo" class="btn btn-info" data-toggle="collapse">Click here to view explanation</a>
+                    <div id="demo" class="collapse">
+                        {% if strategyId == '6' or strategyId == '7' %}
+                            <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
+                            <div class="py-2 h5" id="explanation2"><b>Explanation2: {{explanation2}}</b></div>
+                        {% else %}
+                            <div class="py-2 h5" id="explanation"><b>Explanation: {{explanation}}</b></div>
+                        {% endif %}
+                    </div>
+                        
                 {% endif %}
-            {% endif %}
-        </div>
-
+            </div>
+    </div>
+    <div class="content">
         {% if strategyId != '1' %}
             <div class="question ml-sm-5 pl-sm-5 pt-2", id="fluencyQ">
                 <div class="py-2 h5">Please rate the <b>fluency</b> of the explanation
@@ -283,6 +282,23 @@
             </div>
         </div>
         <script>
+            function handleClick()
+            {
+                this.value = (this.value == 'Click here to view explanation' ? 'Click here to hide explanation' : 'Click here to view explanation');
+            }
+            document.getElementById('expCollapseBtn').onclick=handleClick;
+
+            window.onscroll = function() {myFunction()};
+            var header = document.getElementById("myHeader");
+            var sticky = header.offsetTop;
+            
+            function myFunction() {
+              if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+              } else {
+                header.classList.remove("sticky");
+              }
+            }
             var fluency = '{{fluency}}';  
             var informativeness = '{{informativeness}}';  
             var persuasiveness = '{{persuasiveness}}';  
@@ -335,11 +351,11 @@
                 radiobtn.checked = true;
             }
             
-        </script>
+            </script>
    
-    
     </div>
     
 </form>
+
 
 {% endblock %}

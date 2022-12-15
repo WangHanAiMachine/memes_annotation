@@ -10,7 +10,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Rckjr43jkiubfheriuggrb34f34'
 run_with_ngrok(app)
 
-
 @app.route('/', methods = ['GET','POST'])
 def consentPage():
     aggreement = "None"
@@ -30,36 +29,28 @@ def consentPage():
             return redirect(url_for('consentPage'))
         else:
             if("tweetId" in session and "strategyId" in session and "annotationId" in session):
-                tweetId  = session["tweetId"]
-                strategyId = session["strategyId"]
-                annotationId = session["annotationId"]
-                startTime = session["startTime"]
-                a = session["a"]
-                b = session["b"]
+                
                 return redirect(url_for('questionPage'))
-            
             else:
                 tweetId, strategyId, annotationId, startTime= sampleQuestion()
                 a = random.randint(1, 10)
                 b = random.randint(1, 10)
-                session.clear()
                 session.permanent = True
                 session["tweetId"] = str(tweetId)
                 session["strategyId"] = str(strategyId)
                 session["annotationId"] = str(annotationId)
                 session["startTime"] = str(startTime)
-                session["aggreement"] = aggreement
                 session["a"] = str(a)
                 session["b"] = str(b)
                 app.permanent_session_lifetime = timedelta(minutes=1)
                 session.modified = True 
-
                 return redirect(url_for('questionPage'))
 
 
 @app.route('/questionPage', methods = ['GET','POST'])
 def questionPage():
     if("tweetId" in session and "strategyId" in session and "annotationId" in session):
+        
         tweetId  = session["tweetId"]
         strategyId = session["strategyId"]
         annotationId = session["annotationId"]
@@ -111,6 +102,9 @@ def questionPage():
             controlQuestion = session["controlQuestion"]
 
         if request.method == 'POST':
+            # cur_time = int(time.time())
+            # if((cur_time-startTime)//60 > 1):
+                
             if("fluency" in request.form):
                 fluency = request.form["fluency"]
             if("informativeness" in request.form):
@@ -165,7 +159,6 @@ def questionPage():
 
         elif request.method == 'GET':
             
-            
             return render_template('questionPage.html', tweet = tweet, explanation = explanation, explanation1=explanation1, \
             explanation2=explanation2, tweetId = tweetId, strategyId = strategyId, startTime=startTime, a=a, b=b, ansList=ansList, \
                 fluency=fluency, informativeness=informativeness, persuasiveness=persuasiveness, soundness=soundness,\
@@ -185,6 +178,7 @@ def wrongAnswerPage():
 
 @app.route('/notAvaiablePage')
 def notAvaiablePage():
+    
     return render_template('notAvaiablePage.html')
 
 def sampleQuestion():
@@ -274,6 +268,7 @@ def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, flu
 
 def closeSurvey(tweetId, strategyId, annotationId):
     conn = get_db_connection()
+    
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', 
                         (tweetId, strategyId, annotationId))
 
@@ -304,20 +299,20 @@ def checkProgress(request, strategyId):
 def checkTimeOut():
     cur_time = int(time.time())
     conn = get_db_connection()
-
     inProgress = conn.execute('SELECT * FROM inProgress').fetchall()
     for record in inProgress:
         startTime = record["startTime"]
-        if((cur_time-startTime)//60 > 1):
+        if((cur_time-startTime)//60 >= 1):
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]
-
+            
             closeSurvey(tweetId, strategyId, annotationId)
     conn.close()
+with app.app_context():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=30) # check
+    scheduler.start()
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=60) # check
-scheduler.start()
 if __name__ == "__main__":
     app.run()
