@@ -51,7 +51,7 @@ def consentPage():
                 session["aggreement"] = aggreement
                 session["a"] = str(a)
                 session["b"] = str(b)
-                app.permanent_session_lifetime = timedelta(minutes=30)
+                app.permanent_session_lifetime = timedelta(minutes=1)
                 session.modified = True 
 
                 return redirect(url_for('questionPage'))
@@ -67,6 +67,7 @@ def questionPage():
         a = session["a"]
         b = session["b"]
         if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
+            session.clear()
             return redirect(url_for('notAvaiablePage'))
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
@@ -157,18 +158,19 @@ def questionPage():
                     return redirect(url_for('wrongAnswerPage'))
 
             else:
+
                 flash('Before submitting, kindly respond to all of the questions.')
                 return redirect(url_for('questionPage'))
 
         elif request.method == 'GET':
             
-                
+            
             return render_template('questionPage.html', tweet = tweet, explanation = explanation, explanation1=explanation1, \
             explanation2=explanation2, tweetId = tweetId, strategyId = strategyId, a=a, b=b, ansList=ansList, \
                 fluency=fluency, informativeness=informativeness, persuasiveness=persuasiveness, soundness=soundness,\
                 fluency2=fluency2, informativeness2=informativeness2, persuasiveness2=persuasiveness2, soundness2=soundness2,\
                     hatefulness=hatefulness, controlQuestion=controlQuestion)
-
+    session.clear()
     return redirect(url_for('notAvaiablePage'))
 
 
@@ -306,7 +308,7 @@ def checkTimeOut():
     inProgress = conn.execute('SELECT * FROM inProgress').fetchall()
     for record in inProgress:
         startTime = record["startTime"]
-        if((cur_time-startTime)//60 > 30):
+        if((cur_time-startTime)//60 > 1):
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]

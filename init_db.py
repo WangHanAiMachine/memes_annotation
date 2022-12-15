@@ -11,7 +11,7 @@ hate_exp_step = pd.read_csv("questionBank/tweetHateExplanationWithDetails.csv")
 nonhate_exp_step = pd.read_csv("questionBank/tweetNonHateExplanationWithDetails.csv")
 contxt_exp = pd.read_csv("questionBank/tweetContextExplanation.csv")
 
-demo_size = 2 # 90
+demo_size = 1 # 90
 strategy_size = [1, 2, 6]
 annotation_size = 1 # 3
 
