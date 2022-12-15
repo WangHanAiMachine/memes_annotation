@@ -4,17 +4,18 @@ import sqlite3
 import time, datetime
 from datetime import timedelta
 import hashlib, random
-
+from flask_ngrok import run_with_ngrok
+  
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Rckjr43jkiubfheriuggrb34f34'
+run_with_ngrok(app)
 
 
-@app.route('/consentPage', methods = ['GET','POST'])
+@app.route('/', methods = ['GET','POST'])
 def consentPage():
     aggreement = "None"
     if("aggreement" in session):
         aggreement = session["aggreement"]
-    print(aggreement)
 
     if request.method == 'GET':
         return render_template('consentPage.html', aggreement = aggreement)
@@ -23,7 +24,6 @@ def consentPage():
         if("aggreement" in request.form):
             aggreement = request.form["aggreement"]
             session["aggreement"] = aggreement
-        print(aggreement)
 
         if(aggreement != "yes"):
             flash('Aggreement is required to continue the survey')
@@ -319,3 +319,5 @@ def checkTimeOut():
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=60) # check
 scheduler.start()
+if __name__ == "__main__":
+    app.run()
