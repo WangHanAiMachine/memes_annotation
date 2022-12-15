@@ -9,7 +9,6 @@
             <div class="alert alert-danger">{{ message }}</div>
         {% endfor %}
     </div>
-    
     <div class="question ml-sm-5 pl-sm-5 pt-2" >
         <div class="py-2 h5">Consent Form<br>You are invited to participate in a research study. This study is
             being conducted by Assistant Professor Roy Lee Ka-Wei from Singapore University of Technology and Design. 
@@ -25,6 +24,17 @@
             <input type="radio" id="aggreement2" name="aggreement" value="no" >
             <label for="aggreement2">No, I don't agree</label><br>
     </div>
+    <script>
+        var aggreement = '{{aggreement}}';    
+        if(aggreement == "no"){
+            radiobtn = document.getElementById("aggreement2");
+            radiobtn.checked = true;
+        } else if (aggreement == "yes"){
+            radiobtn = document.getElementById("aggreement1");
+            radiobtn.checked = true;
+        }
+        
+    </script>
     <div class="d-flex align-items-center pt-3">
         <div class="ml-auto mr-sm-5">
                 <input type="submit" value="Next"

@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from apscheduler.schedulers.background import BackgroundScheduler
-from bs4 import BeautifulSoup
 from threading import Timer
 import sqlite3
 import time
@@ -15,32 +14,63 @@ app.config['SECRET_KEY'] = 'Rckjr43jkiubfheriuggrb34f34'
 
 @app.route('/consentPage', methods = ['GET','POST'])
 def consentPage():
+    aggreement = "None"
+    if("aggreement" in session):
+        aggreement = session["aggreement"]
+
     if request.method == 'POST':
-        aggreement = request.form["aggreement"]
+        if("aggreement" in request.form):
+            aggreement = request.form["aggreement"]
+
         if(aggreement != "yes"):
             flash('Aggreement is required to continue the survey')
             return redirect(url_for('consentPage'))
         else:
-            tweetId, strategyId, annotationId, startTime= sampleQuestion()
-            a = random.randint(1, 10)
-            b = random.randint(1, 10)
-            correctAnswer = a + b 
+            if("tweetId" in session and "strategyId" in session and "annotationId" in session):
+   
+                tweetId  = session["tweetId"]
+                strategyId = session["strategyId"]
+                annotationId = session["annotationId"]
 
-            session.permanent = True
-            session["tweetId"] = str(tweetId)
-            session["strategyId"] = str(strategyId)
-            session["annotationId"] = str(annotationId)
-            app.permanent_session_lifetime = timedelta(minutes=30)
-            session.modified = True 
+                startTime = session["startTime"]
+                a = session["a"]
+                b = session["b"]
+                correctAnswer = session["correctAnswer"]
+                return redirect(url_for('questionPage', tweetId=tweetId, strategyId=strategyId, annotationId=annotationId, startTime=startTime, a=a, b=b, correctAnswer=correctAnswer))
+            
+            else:
+                
+                tweetId, strategyId, annotationId, startTime= sampleQuestion()
+                a = random.randint(1, 10)
+                b = random.randint(1, 10)
+                correctAnswer = a + b 
+                session.clear()
+                session.permanent = True
+                session["tweetId"] = str(tweetId)
+                session["strategyId"] = str(strategyId)
+                session["annotationId"] = str(annotationId)
+                session["startTime"] = str(startTime)
+                session["aggreement"] = aggreement
+                session["a"] = str(a)
+                session["b"] = str(b)
+                session["correctAnswer"] = str(correctAnswer)
+                app.permanent_session_lifetime = timedelta(minutes=30)
+                session.modified = True 
 
-            return redirect(url_for('questionPage', tweetId=tweetId, strategyId=strategyId, annotationId=annotationId, startTime=startTime, a=a, b=b, correctAnswer=correctAnswer))
+                return redirect(url_for('questionPage', tweetId=tweetId, strategyId=strategyId, annotationId=annotationId, startTime=startTime, a=a, b=b, correctAnswer=correctAnswer))
+            
+        
+    elif request.method == 'GET':
 
-    return render_template('consentPage.html')
+        return render_template('consentPage.html', aggreement = aggreement)
 
 @app.route('/questionPage/<tweetId>/<strategyId>/<annotationId>/<startTime>/<a>/<b>/<correctAnswer>', methods = ['GET','POST'])
 def questionPage(tweetId, strategyId, annotationId, startTime, a, b, correctAnswer):
     if("tweetId" in session and "strategyId" in session and "annotationId" in session):
         if(str(tweetId) in session["tweetId"] and str(strategyId) in session["strategyId"] and str(annotationId) in session["annotationId"]):
+            
+            if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
+                return redirect(url_for('notAvaiablePage'))
 
             tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
 
@@ -49,51 +79,100 @@ def questionPage(tweetId, strategyId, annotationId, startTime, a, b, correctAnsw
             ansList = [random.choice(numbers), random.choice(numbers), random.choice(numbers)]
             ansList.insert(random.randint(0, 3), int(correctAnswer))
 
-            if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
-                return redirect(url_for('notAvaiablePage'))
-            
-            if request.method == 'POST' and checkProgress(request, strategyId):
-                fluency = -1
-                informativeness = -1
-                persuasiveness = -1
-                soundness = -1
-                fluency2 = -1
-                informativeness2 = -1
-                persuasiveness2 = -1
-                soundness2 = -1
-                if(str(strategyId) != "1"):
+            fluency = -1
+            informativeness = -1
+            persuasiveness = -1
+            soundness = -1
+            fluency2 = -1
+            informativeness2 = -1
+            persuasiveness2 = -1
+            soundness2 = -1
+            hatefulness = -1
+            controlQuestion = -1
+
+            if("fluency" in session):
+                    fluency = session["fluency"]
+            if("fluency2" in session):
+                fluency2 = session["fluency2"]
+            if("informativeness" in session):
+                informativeness = session["informativeness"]
+            if("informativeness2" in session):
+                informativeness2 = session["informativeness2"]
+            if("persuasiveness" in session):
+                persuasiveness = session["persuasiveness"]
+            if("persuasiveness2" in session):
+                persuasiveness2 = session["persuasiveness2"]
+            if("soundness" in session):
+                soundness = session["soundness"]
+            if("soundness2" in session):
+                soundness2 = session["soundness2"]
+            if("hatefulness" in session):
+                hatefulness = session["hatefulness"]
+            if("controlQuestion" in session):
+                controlQuestion = session["controlQuestion"]
+
+            if request.method == 'POST':
+                
+                if("fluency" in request.form):
                     fluency = request.form["fluency"]
+                if("informativeness" in request.form):
                     informativeness = request.form["informativeness"]
+                if("persuasiveness" in request.form):
                     persuasiveness = request.form["persuasiveness"]
+                if("persuasiveness" in request.form):
+                    persuasiveness = request.form["persuasiveness"]
+                if("soundness" in request.form):
                     soundness = request.form["soundness"]
-                    if(str(strategyId) == "6" or str(strategyId) == "7"):
-                        fluency2 = request.form["fluencyExp2"]
-                        informativeness2 = request.form["informativenessExp2"]
-                        persuasiveness2 = request.form["persuasivenessExp2"]
-                        soundness2 = request.form["soundnessExp2"]
-                hatefulness = request.form["hatefulness"]
-                controlQuestion = request.form["controlQuestion"]
+                if("fluency2" in request.form):
+                    fluency2 = request.form["fluency2"]
+                if("informativeness2" in request.form):
+                    informativeness2 = request.form["informativeness2"]
+                if("persuasiveness2" in request.form):
+                    persuasiveness2 = request.form["persuasiveness2"]
+                if("soundness2" in request.form):
+                    soundness2 = request.form["soundness2"]
+                if("hatefulness" in request.form):
+                    hatefulness = request.form["hatefulness"]
+                if("controlQuestion" in request.form):
+                    controlQuestion = request.form["controlQuestion"]
 
-                m = hashlib.md5()
-                id = (str(tweetId) + str(strategyId) + str(annotationId)).encode('utf-8')
-                m.update(id)
-                surveyCode = str(int(m.hexdigest(), 16))[0:12]
+                session["fluency"] = fluency
+                session["informativeness"] = informativeness
+                session["persuasiveness"] = persuasiveness
+                session["soundness"] = soundness
+                session["fluency2"] = fluency2
+                session["informativeness2"] = informativeness2
+                session["persuasiveness2"] = persuasiveness2
+                session["soundness2"] = soundness2
+                session["hatefulness"] = hatefulness
+                session["controlQuestion"] = controlQuestion
 
-                if(int(controlQuestion) ==int(correctAnswer) ):
-                    submitQuestion(tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
-                        informativeness, informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness)
+                if(checkProgress(request, strategyId)):
+                    m = hashlib.md5()
+                    id = (str(tweetId) + str(strategyId) + str(annotationId)).encode('utf-8')
+                    m.update(id)
+                    surveyCode = str(int(m.hexdigest(), 16))[0:12]
 
-                    return redirect(url_for('endPage', surveyCode = surveyCode))
+                    if(int(controlQuestion) ==int(correctAnswer) ):
+                        submitQuestion(tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
+                            informativeness, informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness)
+
+                        return redirect(url_for('endPage', surveyCode = surveyCode))
+                    else:
+                        return redirect(url_for('wrongAnswerPage', tweetId=tweetId, strategyId=strategyId, annotationId=annotationId))
+
                 else:
-                    print()
-                    return redirect(url_for('wrongAnswerPage', tweetId=tweetId, strategyId=strategyId, annotationId=annotationId))
+                    flash('Before submitting, kindly respond to all of the questions.')
+                    return redirect(url_for('questionPage', tweetId=tweetId, strategyId=strategyId, annotationId=annotationId, startTime=startTime, a=a, b=b, correctAnswer=correctAnswer))
 
-            elif request.method == 'POST':
-                flash('Before submitting, kindly respond to all of the questions.')
-            
-            
-            return render_template('questionPage.html', tweet = tweet, explanation = explanation, explanation1=explanation1, \
-            explanation2=explanation2, tweetId = tweetId, strategyId = strategyId, a=a, b=b, ansList=ansList)
+            elif request.method == 'GET':
+                
+                    
+                return render_template('questionPage.html', tweet = tweet, explanation = explanation, explanation1=explanation1, \
+                explanation2=explanation2, tweetId = tweetId, strategyId = strategyId, a=a, b=b, ansList=ansList, \
+                    fluency=fluency, informativeness=informativeness, persuasiveness=persuasiveness, soundness=soundness,\
+                    fluency2=fluency2, informativeness2=informativeness2, persuasiveness2=persuasiveness2, soundness2=soundness2,\
+                        hatefulness=hatefulness, controlQuestion=controlQuestion)
         else:
             return redirect(url_for('timeOutPage'))
 
@@ -134,23 +213,24 @@ def sampleQuestion():
     tweetId = -1
     strategyId = -1
     annotationId = -1
+    startTime = int(time.time())
     for record in questionsStatus:
         if(int(record["annotated"]) == 0):
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]
             break
+    if(tweetId >0 and strategyId > 0 and annotationId > 0):
+        conn.execute('UPDATE questionsStatus SET annotated = ?'
+                            ' WHERE tweetId = ? AND strategyId = ? AND annotationId = ?',
+                            (1, tweetId, strategyId, annotationId))
 
-    conn.execute('UPDATE questionsStatus SET annotated = ?'
-                         ' WHERE tweetId = ? AND strategyId = ? AND annotationId = ?',
-                         (1, tweetId, strategyId, annotationId))
-
-    startTime = int(time.time())
-    conn.execute("INSERT INTO inprogress (tweetId, strategyId, annotationId, startTime ) VALUES (?, ?, ?, ?)",
-            (tweetId, strategyId, annotationId, startTime)
-            )
-    conn.commit()
-    conn.close()
+        
+        conn.execute("INSERT INTO inprogress (tweetId, strategyId, annotationId, startTime ) VALUES (?, ?, ?, ?)",
+                (tweetId, strategyId, annotationId, startTime)
+                )
+        conn.commit()
+        conn.close()
     return tweetId, strategyId, annotationId, startTime
 
 
