@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="Post">
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    </div>
+    <div class="container mt-sm-5 my-1">
+        <div class="question ml-sm-5 pl-sm-5 pt-2">
+            <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
+            {% if strategyId|int != 1 %}
+                {% if strategyId == '6' or strategyId == '7' %}
+                    <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
+                    <div class="py-2 h5" id="explanation2"><b>Explanation2: {{explanation2}}</b></div>
+                {% else %}
+                    <div class="py-2 h5" id="explanation"><b>Explanation: {{explanation}}</b></div>
+                {% endif %}
+            {% endif %}
+        </div>
+       
+        {% if strategyId != '1' %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="fluencyQ">
+                <div class="py-2 h5">please rate the <b>fluency</b> of the explanation
+                    {% if strategyId == '6' or strategyId == '7' %}
+                    1
+                    {% endif %}
+                    (1 being poor, and 5 being excellent).
+                    <br><span style="font-size:0.9em"><b>Fluency</b> describes whether an explanation follows proper grammar and structural rules.</span></div>
+            
+                    <input type="radio" id="fluency1" name="fluency" value="1">
+                    <label for="fluency1">1 - Poor</label><br>
+                    <input type="radio" id="fluency2" name="fluency" value="2">
+                    <label for="fluency2">2 - Fair</label><br>  
+                    <input type="radio" id="fluency3" name="fluency" value="3">
+                    <label for="fluency3">3 - Good</label><br>
+                    <input type="radio" id="fluency4" name="fluency" value="4">
+                    <label for="fluency4">4 - Very Good</label><br>  
+                    <input type="radio" id="fluency5" name="fluency" value="5">
+                    <label for="fluency5">5 - Excellent</label><br><br>
+        
+
+            </div>
+            {% if strategyId == '6' or strategyId == '7' %}
+                <div class="question ml-sm-5 pl-sm-5 pt-2", id="fluencyQ">
+                    <div class="py-2 h5">Please rate the <b>fluency</b> of the explanation2 (1 being poor, and 5 being excellent).
+                        <br><span style="font-size:0.9em"><b>Fluency</b> describes whether an explanation follows proper grammar and structural rules.</span></div>
+                
+                        <input type="radio" id="fluency21" name="fluencyExp2" value="1">
+                        <label for="fluency21">1 - Poor</label><br>
+                        <input type="radio" id="fluency22" name="fluencyExp2" value="2">
+                        <label for="fluency22">2 - Fair</label><br>  
+                        <input type="radio" id="fluency23" name="fluencyExp2" value="3">
+                        <label for="fluency23">3 - Good</label><br>
+                        <input type="radio" id="fluency24" name="fluencyExp2" value="4">
+                        <label for="fluency24">4 - Very Good</label><br>  
+                        <input type="radio" id="fluency25" name="fluencyExp2" value="5">
+                        <label for="fluency25">5 - Excellent</label><br><br>
+            
+
+                </div>
+            {% endif %}
+            {% if (tweetId|int + strategyId|int) % 3 == 1 %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id = "mathQ">
+                <div class="py-2 h5">
+                    Please choose the option that you believe is the answer to {{a}} + {{b}}.</div>  
+                        
+                        <input type="radio" id="controlQuestion1" name="controlQuestion" value="{{ansList[0]}}">
+                        <label for="controlQuestion1">{{ansList[0]}}</label><br>
+                        <input type="radio" id="controlQuestion2" name="controlQuestion" value="{{ansList[1]}}">
+                        <label for="controlQuestion2">{{ansList[1]}}</label><br>  
+                        <input type="radio" id="controlQuestion3" name="controlQuestion" value="{{ansList[2]}}">
+                        <label for="controlQuestion3">{{ansList[2]}}</label><br>
+                        <input type="radio" id="controlQuestion4" name="controlQuestion" value="{{ansList[3]}}">
+                        <label for="controlQuestion4">{{ansList[3]}}</label><br>  
+            </div>  
+            {% endif %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="informativenessQ">
+                <div class="py-2 h5">Please rate the <b>informativeness</b> of the explanation
+                    {% if strategyId == '6' or strategyId == '7' %}
+                    1
+                    {% endif %}
+                    (1 being not informative, and 5 being very informative).
+                    <br><span style="font-size:0.9em"><b>Informativeness</b> describes whether an explanation provides useful background information
+                    (i.e. 'chutiya' means 'idiot' in Hindi)</span>.</div>  
+        
+                        <input type="radio" id="informativeness1" name="informativeness" value="1">
+                        <label for="informativeness1">1 - Not Informative</label><br>
+                        <input type="radio" id="informativeness2" name="informativeness" value="2">
+                        <label for="informativeness2">2 - Slightly Informative</label><br>  
+                        <input type="radio" id="informativeness3" name="informativeness" value="3">
+                        <label for="informativeness3">3 - Somewhat Informative</label><br>
+                        <input type="radio" id="informativeness4" name="informativeness" value="4">
+                        <label for="informativeness4">4 - Moderately Informative</label><br>  
+                        <input type="radio" id="informativeness5" name="informativeness" value="5">
+                        <label for="informativeness5">5 - Very Informative</label><br><br>
+        
+            </div>  
+            {% if strategyId == '6' or strategyId == '7' %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="informativenessQ">
+                <div class="py-2 h5">Please rate the <b>informativeness</b> of the explanation2 (1 being not informative, and 5 being very informative).
+                    <br><span style="font-size:0.9em"><b>Informativeness</b> describes whether an explanation provides useful background information
+                    (i.e. 'chutiya' means 'idiot' in Hindi)</span>.</div>  
+        
+                        <input type="radio" id="informativeness21" name="informativenessExp2" value="1">
+                        <label for="informativeness21">1 - Not Informative</label><br>
+                        <input type="radio" id="informativeness22" name="informativenessExp2" value="2">
+                        <label for="informativeness22">2 - Slightly Informative</label><br>  
+                        <input type="radio" id="informativeness23" name="informativenessExp2" value="3">
+                        <label for="informativeness23">3 - Somewhat Informative</label><br>
+                        <input type="radio" id="informativeness24" name="informativenessExp2" value="4">
+                        <label for="informativeness24">4 - Moderately Informative</label><br>  
+                        <input type="radio" id="informativeness25" name="informativenessExp2" value="5">
+                        <label for="informativeness25">5 - Very Informative</label><br><br>
+        
+            </div> 
+            {% endif %}
+            {% if (tweetId|int + strategyId|int) % 3 == 2 %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id = "mathQ">
+                <div class="py-2 h5">
+                    Please choose the option that you believe is the answer to {{a}} + {{b}}.</div>  
+                        
+                        <input type="radio" id="controlQuestion1" name="controlQuestion" value="{{ansList[0]}}">
+                        <label for="controlQuestion1">{{ansList[0]}}</label><br>
+                        <input type="radio" id="controlQuestion2" name="controlQuestion" value="{{ansList[1]}}">
+                        <label for="controlQuestion2">{{ansList[1]}}</label><br>  
+                        <input type="radio" id="controlQuestion3" name="controlQuestion" value="{{ansList[2]}}">
+                        <label for="controlQuestion3">{{ansList[2]}}</label><br>
+                        <input type="radio" id="controlQuestion4" name="controlQuestion" value="{{ansList[3]}}">
+                        <label for="controlQuestion4">{{ansList[3]}}</label><br>  
+            </div>  
+            {% endif %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="persuasivenessQ">
+                <div class="py-2 h5">
+                    Please rate the <b>persuasiveness</b> of the explanation
+                    {% if strategyId == '6' or strategyId == '7' %}
+                    1
+                    {% endif %}
+                    (1 being not persuasive, and 5 being very persuasive).
+                    <br><span style="font-size:0.9em"><b>Persuasiveness </b> describes whether an explanation appears to be convincing</span></div>  
+        
+                        <input type="radio" id="persuasiveness1" name="persuasiveness" value="1">
+                        <label for="persuasiveness1">1 - Not Persuasive</label><br>
+                        <input type="radio" id="persuasiveness2" name="persuasiveness" value="2">
+                        <label for="persuasiveness2">2 - Slightly Persuasive</label><br>  
+                        <input type="radio" id="persuasiveness3" name="persuasiveness" value="3">
+                        <label for="persuasiveness3">3 - Somewhat Persuasive</label><br>
+                        <input type="radio" id="persuasiveness4" name="persuasiveness" value="4">
+                        <label for="persuasiveness4">4 - Moderately Persuasive</label><br>  
+                        <input type="radio" id="persuasiveness5" name="persuasiveness" value="5">
+                        <label for="persuasiveness5">5 - Very Persuasive</label><br><br>
+        
+            </div>  
+            {% if strategyId == '6' or strategyId == '7' %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="persuasivenessQ">
+                <div class="py-2 h5">Please rate the <b>persuasiveness</b> of the explanation2 (1 being not persuasive, and 5 being very persuasive).
+                    <br><span style="font-size:0.9em"><b>Persuasiveness </b> describes whether an explanation appears to be convincing</span></div>  
+        
+                        <input type="radio" id="persuasiveness21" name="persuasivenessExp2" value="1">
+                        <label for="persuasivenes21">1 - Not Persuasive</label><br>
+                        <input type="radio" id="persuasiveness22" name="persuasivenessExp2" value="2">
+                        <label for="persuasiveness22">2 - Slightly Persuasive</label><br>  
+                        <input type="radio" id="persuasiveness23" name="persuasivenessExp2" value="3">
+                        <label for="persuasiveness23">3 - Somewhat Persuasive</label><br>
+                        <input type="radio" id="persuasiveness24" name="persuasivenessExp2" value="4">
+                        <label for="persuasiveness24">4 - Moderately Persuasive</label><br>  
+                        <input type="radio" id="persuasiveness25" name="persuasivenessExp2" value="5">
+                        <label for="persuasiveness25">5 - Very Persuasive</label><br><br>
+        
+            </div> 
+            {% endif %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="soundnessQ">
+                <div class="py-2 h5">Q
+                    Please rate the <b>soundness</b> of the explanation
+                    {% if strategyId == '6' or strategyId == '7' %}
+                    1
+                    {% endif %}
+                    (1 being not sound, and 5 being very sound).
+                    <br><span style="font-size:0.9em"><b>Soundness</b> describes whether an explanation appears to be
+                    valid and logical.</span></div>  
+        
+                        <input type="radio" id="soundness1" name="soundness" value="1">
+                        <label for="soundness1">1 - Not Sound</label><br>
+                        <input type="radio" id="soundness2" name="soundness" value="2">
+                        <label for="soundness2">2 - Slightly Sound</label><br>  
+                        <input type="radio" id="soundness3" name="soundness" value="3">
+                        <label for="soundness3">3 - Somewhat Sound</label><br>
+                        <input type="radio" id="soundness4" name="soundness" value="4">
+                        <label for="soundness4">4 - Moderately Sound</label><br>  
+                        <input type="radio" id="soundness5" name="soundness" value="5">
+                        <label for="soundness5">5 - Very Sound</label><br><br>
+        
+            </div>   
+            {% if strategyId == '6' or strategyId == '7' %}
+            <div class="question ml-sm-5 pl-sm-5 pt-2", id="soundnessQ">
+                <div class="py-2 h5">Please rate the <b>soundness</b> of the explanation2 (1 being not sound, and 5 being very sound).
+                    <br><span style="font-size:0.9em"><b>Soundness</b> describes whether an explanation appears to be
+                    valid and logical.</span></div>  
+        
+                        <input type="radio" id="soundness21" name="soundnessExp2" value="1">
+                        <label for="soundness21">1 - Not Sound</label><br>
+                        <input type="radio" id="soundness22" name="soundnessExp2" value="2">
+                        <label for="soundness22">2 - Slightly Sound</label><br>  
+                        <input type="radio" id="soundness23" name="soundnessExp2" value="3">
+                        <label for="soundness23">3 - Somewhat Sound</label><br>
+                        <input type="radio" id="soundness24" name="soundnessExp2" value="4">
+                        <label for="soundness24">4 - Moderately Sound</label><br>  
+                        <input type="radio" id="soundness25" name="soundnessExp2" value="5">
+                        <label for="soundness25">5 - Very Sound</label><br><br>
+        
+            </div>
+            {% endif %}
+        {% endif %}
+        {% if (tweetId|int + strategyId|int) % 3 == 0 %}
+        <div class="question ml-sm-5 pl-sm-5 pt-2", id = "mathQ">
+            <div class="py-2 h5">
+                Please choose the option that you believe is the answer to {{a}} + {{b}}.</div>  
+                    
+                    <input type="radio" id="controlQuestion1" name="controlQuestion" value="{{ansList[0]}}">
+                    <label for="controlQuestion1">{{ansList[0]}}</label><br>
+                    <input type="radio" id="controlQuestion2" name="controlQuestion" value="{{ansList[1]}}">
+                    <label for="controlQuestion2">{{ansList[1]}}</label><br>  
+                    <input type="radio" id="controlQuestion3" name="controlQuestion" value="{{ansList[2]}}">
+                    <label for="controlQuestion3">{{ansList[2]}}</label><br>
+                    <input type="radio" id="controlQuestion4" name="controlQuestion" value="{{ansList[3]}}">
+                    <label for="controlQuestion4">{{ansList[3]}}</label><br>  
+        </div>  
+        {% endif %}
+        <div class="question ml-sm-5 pl-sm-5 pt-2", id = "hatefulnessQ">
+            <div class="py-2 h5">
+                Please rate the <b>hatefulness of the tweet message</b> (1 being hateful, and 5 being non-hateful).
+                <br> <span style="font-size:0.9em"><em> hatefulness </em> describes whether you think the tweet message
+                is hateful given the provided explanation. </span></div>  
+
+                    <input type="radio" id="hatefulness1" name="hatefulness" value="1">
+                    <label for="hatefulness1">1 - Hateful</label><br>
+                    <input type="radio" id="hatefulness2" name="hatefulness" value="2">
+                    <label for="hatefulness2">2 - Somewhat Hateful</label><br>  
+                    <input type="radio" id="hatefulness3" name="hatefulness" value="3">
+                    <label for="hatefulness3">3 - Neutral</label><br>
+                    <input type="radio" id="hatefulness4" name="hatefulness" value="4">
+                    <label for="hatefulness4">4 - Somewhat Non-Hateful</label><br>  
+                    <input type="radio" id="hatefulness5" name="hatefulness" value="5">
+                    <label for="hatefulness5">5 - Non-Hateful</label><br><br>
+        </div>  
+       
+        <div class="d-flex align-items-center pt-3">
+            <div class="ml-auto mr-sm-5">
+                    <input type="submit" value="Submit"
+                            class="btn btn-danger btn-sm">
+            
+            </div>
+        </div>
+        <script>
+            var fluency = '{{fluency}}';  
+            var informativeness = '{{informativeness}}';  
+            var persuasiveness = '{{persuasiveness}}';  
+            var soundness = '{{soundness}}';  
+            var fluency2 = '{{fluency2}}';  
+            var informativeness2 = '{{informativeness2}}';  
+            var persuasiveness2 = '{{persuasiveness2}}';  
+            var soundness2 = '{{soundness2}}';  
+            var hatefulness = '{{hatefulness}}';  
+            var controlQuestion = '{{controlQuestion}}';   
+            
+            if(fluency != "-1"){
+                radiobtn = document.getElementById("fluency" + fluency);
+                radiobtn.checked = true;
+            }
+            if(informativeness != "-1"){
+                radiobtn = document.getElementById("informativeness" + informativeness);
+                radiobtn.checked = true;
+            }
+            if(persuasiveness != "-1"){
+                radiobtn = document.getElementById("persuasiveness" + persuasiveness);
+                radiobtn.checked = true;
+            }
+            if(soundness != "-1"){
+                radiobtn = document.getElementById("soundness" + soundness);
+                radiobtn.checked = true;
+            }
+            if(fluency2 != "-1"){
+                radiobtn = document.getElementById("fluency2" + fluency2);
+                radiobtn.checked = true;
+            }
+            if(informativeness2 != "-1"){
+                radiobtn = document.getElementById("informativeness2" + informativeness2);
+                radiobtn.checked = true;
+            }
+            if(persuasiveness2 != "-1"){
+                radiobtn = document.getElementById("persuasiveness2" + persuasiveness2);
+                radiobtn.checked = true;
+            }
+            if(soundness2 != "-1"){
+                radiobtn = document.getElementById("soundness2" + soundness2);
+                radiobtn.checked = true;
+            }
+            if(hatefulness != "-1"){
+                radiobtn = document.getElementById("hatefulness" + hatefulness);
+                radiobtn.checked = true;
+            }
+            if(controlQuestion != "-1"){
+                radiobtn = document.getElementById("controlQuestion" + controlQuestion);
+                radiobtn.checked = true;
+            }
+            
+        </script>
+   
+    
+    </div>
+    
+</form>
+
+{% endblock %}

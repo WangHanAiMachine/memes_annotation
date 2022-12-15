@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-sm-5 my-1">
+    <form method="Post"> 
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    </div>
+    <div class="question ml-sm-5 pl-sm-5 pt-2" >
+        <div class="py-2 h5">Consent Form<br>You are invited to participate in a research study. This study is
+            being conducted by Assistant Professor Roy Lee Ka-Wei from Singapore University of Technology and Design. 
+            <br>The purpose of this study is to investigate the effectiveness and persuasiveness of large language model
+             in explaining social media posts. The survey will take approximately 10 mins of your time. You will be asked 
+             to complete an online survey that contains questions about the hatefulness of a Twitter tweet message and four 
+             questions about the quality of the provided explanation (if applicable). <br>&nbsp;Your participation in this 
+             study is completely voluntary and you have the right to withdraw from participation at any time without giving
+              any reason and penalty. You may decline to answer any survey questions, and end your participation. If you do
+               not wish to complete this survey, just close your browser and all your responses will be discarded.&nbsp;<br> </div>
+            <input type="radio" id="aggreement1" name="aggreement" value="yes"  >
+            <label for="aggreement1">Yes, I agree.</label><br>
+            <input type="radio" id="aggreement2" name="aggreement" value="no" >
+            <label for="aggreement2">No, I don't agree</label><br>
+    </div>
+    <script>
+        var aggreement = '{{aggreement}}';    
+        if(aggreement == "no"){
+            radiobtn = document.getElementById("aggreement2");
+            radiobtn.checked = true;
+        } else if (aggreement == "yes"){
+            radiobtn = document.getElementById("aggreement1");
+            radiobtn.checked = true;
+        }
+        
+    </script>
+    <div class="d-flex align-items-center pt-3">
+        <div class="ml-auto mr-sm-5">
+                <input type="submit" value="Next"
+                        class="btn btn-danger btn-sm">
+        </div>
+    </div>
+</form>
+</div>
+
+{% endblock %}
