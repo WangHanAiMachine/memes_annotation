@@ -19,21 +19,6 @@
                 {% endif %}
             {% endif %}
         </div>
-       
-        {% if strategyId == "1" %}
-        <div class="question ml-sm-5 pl-sm-5 pt-2", id = "mathQ">
-            <div class="py-2 h5">
-                Please choose the option that you believe is the answer to {{a}} + {{b}}.</div>  
-                    <input type="radio" id="controlQuestion1" name="controlQuestion" value="{{ansList[0]}}">
-                    <label for="controlQuestion1">{{ansList[0]}}</label><br>
-                    <input type="radio" id="controlQuestion2" name="controlQuestion" value="{{ansList[1]}}">
-                    <label for="controlQuestion2">{{ansList[1]}}</label><br>  
-                    <input type="radio" id="controlQuestion3" name="controlQuestion" value="{{ansList[2]}}">
-                    <label for="controlQuestion3">{{ansList[2]}}</label><br>
-                    <input type="radio" id="controlQuestion4" name="controlQuestion" value="{{ansList[3]}}">
-                    <label for="controlQuestion4">{{ansList[3]}}</label><br>  
-        </div>  
-        {% endif %}
 
         {% if strategyId != '1' %}
             <div class="question ml-sm-5 pl-sm-5 pt-2", id="fluencyQ">
@@ -226,7 +211,7 @@
             </div>
             {% endif %}
         {% endif %}
-        {% if (tweetId|int + strategyId|int) % 3 == 0 %}
+        {% if (tweetId|int + strategyId|int) % 3 == 0 or strategyId|int == 1%}
         <div class="question ml-sm-5 pl-sm-5 pt-2", id = "mathQ">
             <div class="py-2 h5">
                 Please choose the option that you believe is the answer to {{a}} + {{b}}.</div>  
