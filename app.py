@@ -72,10 +72,11 @@ def questionPage():
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
 
-        numbers = list(range(1, 100))
-        numbers.remove(int(a) + int(b))
-        ansList = [random.choice(numbers), random.choice(numbers), random.choice(numbers)]
-        ansList.insert(random.randint(0, 3), int(int(a) + int(b)))
+        correctAns = int(a) + int(b)
+        ansList = [correctAns-3, correctAns-2,correctAns-1, correctAns, correctAns+1, correctAns+2, correctAns+3]
+        index = random.randint(0, 3)
+        ansList = ansList[index:index+4]
+        random.shuffle(ansList)
 
         fluency = -1
         informativeness = -1
@@ -166,11 +167,10 @@ def questionPage():
             
             
             return render_template('questionPage.html', tweet = tweet, explanation = explanation, explanation1=explanation1, \
-            explanation2=explanation2, tweetId = tweetId, strategyId = strategyId, a=a, b=b, ansList=ansList, \
+            explanation2=explanation2, tweetId = tweetId, strategyId = strategyId, startTime=startTime, a=a, b=b, ansList=ansList, \
                 fluency=fluency, informativeness=informativeness, persuasiveness=persuasiveness, soundness=soundness,\
                 fluency2=fluency2, informativeness2=informativeness2, persuasiveness2=persuasiveness2, soundness2=soundness2,\
                     hatefulness=hatefulness, controlQuestion=controlQuestion)
-    session.clear()
     return redirect(url_for('notAvaiablePage'))
 
 

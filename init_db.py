@@ -11,9 +11,9 @@ hate_exp_step = pd.read_csv("questionBank/tweetHateExplanationWithDetails.csv")
 nonhate_exp_step = pd.read_csv("questionBank/tweetNonHateExplanationWithDetails.csv")
 contxt_exp = pd.read_csv("questionBank/tweetContextExplanation.csv")
 
-demo_size = 1 # 90
+demo_size = 2 # 90
 strategy_size = [1, 2, 6]
-annotation_size = 1 # 3
+annotation_size = 2 # 3
 
 
 
@@ -23,7 +23,7 @@ with open('schema.sql') as f:
     conn = sqlite3.connect('database.db', isolation_level=None,
                        detect_types=sqlite3.PARSE_COLNAMES)
     db_df = pd.read_sql_query("SELECT * FROM submitted", conn)
-    db_df.to_csv('questionBank/submitted.csv', index=False)
+    db_df.to_csv('questionAnswer/submitted.csv', index=False)
     conn.close()
 
     connection.executescript(f.read())
