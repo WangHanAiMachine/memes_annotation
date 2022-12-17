@@ -42,6 +42,16 @@ def consentPage():
                 session["startTime"] = str(startTime)
                 session["a"] = str(a)
                 session["b"] = str(b)
+
+                correctAns = int(a) + int(b)
+                ansList = [correctAns-3, correctAns-2,correctAns-1, correctAns, correctAns+1, correctAns+2, correctAns+3]
+                index = random.randint(0, 3)
+                ansList = ansList[index:index+4]
+                random.shuffle(ansList)
+                session["ansList1"] = ansList[0]
+                session["ansList2"] = ansList[1]
+                session["ansList3"] = ansList[2]
+                session["ansList4"] = ansList[3]
                 app.permanent_session_lifetime = timedelta(minutes=30)
                 session.modified = True 
                 return redirect(url_for('questionPage'))
@@ -63,11 +73,7 @@ def questionPage():
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
 
-        correctAns = int(a) + int(b)
-        ansList = [correctAns-3, correctAns-2,correctAns-1, correctAns, correctAns+1, correctAns+2, correctAns+3]
-        index = random.randint(0, 3)
-        ansList = ansList[index:index+4]
-        random.shuffle(ansList)
+        
 
         fluency = -1
         informativeness = -1
@@ -79,27 +85,24 @@ def questionPage():
         soundness2 = -1
         hatefulness = -1
         controlQuestion = -1
+        ansList = []
 
         if("fluency" in session):
             fluency = session["fluency"]
+            informativeness = session["informativeness"]
+            persuasiveness = session["persuasiveness"]
+            soundness = session["soundness"]
         if("fluency2" in session):
             fluency2 = session["fluency2"]
-        if("informativeness" in session):
-            informativeness = session["informativeness"]
-        if("informativeness2" in session):
             informativeness2 = session["informativeness2"]
-        if("persuasiveness" in session):
-            persuasiveness = session["persuasiveness"]
-        if("persuasiveness2" in session):
             persuasiveness2 = session["persuasiveness2"]
-        if("soundness" in session):
-            soundness = session["soundness"]
-        if("soundness2" in session):
             soundness2 = session["soundness2"]
         if("hatefulness" in session):
             hatefulness = session["hatefulness"]
-        if("controlQuestion" in session):
             controlQuestion = session["controlQuestion"]
+        if("ansList1" in session):
+            for i in range(1, 5):
+                ansList.append(session["ansList" + str(i)])
 
         if request.method == 'POST':
                 
@@ -176,6 +179,10 @@ def wrongAnswerPage():
 @app.route('/notAvaiablePage')
 def notAvaiablePage():
     return render_template('notAvaiablePage.html')
+
+@app.route('/timeOutPage')
+def timeOutPage():
+    return render_template('timeOutPage.html')
 
 def sampleQuestion():
     conn = get_db_connection()

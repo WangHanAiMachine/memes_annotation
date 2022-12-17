@@ -3,16 +3,21 @@
 {% block content %}
 
 <form method="Post">
-    
-    <div class="top-container">
-        {% for message in get_flashed_messages() %}
-            <div class="alert alert-danger">{{ message }}</div>
-        {% endfor %}
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
+    {% endfor %}
+
    
     <div class="header" id="myHeader">
-        <div class="w3-container" style = "padding-bottom: 10px;">
-            <div id="timer"  style = "position: absolute;right:16px;top:0px; " class="py-2 h5" ></div></div>
+        <div class="w3-container" align="right" >
+            <div id="timer"  class="py-2 h5" ></div>
+        </div>
 
         <div class="question ml-sm-5 pl-sm-5 pt-2" >
             <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
@@ -357,8 +362,17 @@
                 radiobtn.checked = true;
             }
             if(controlQuestion != "-1"){
-                radiobtn = document.getElementById("controlQuestion" + controlQuestion);
-                radiobtn.checked = true;
+
+                for (const x of Array(4).keys()) {
+                    radiobtn = document.getElementById("controlQuestion" + (x+1).toString());
+
+                    if(radiobtn.value == controlQuestion){
+                        
+                        radiobtn.checked = true;
+                    }
+
+                }
+
             }
             
             </script>
