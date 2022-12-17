@@ -42,7 +42,7 @@ def consentPage():
                 session["startTime"] = str(startTime)
                 session["a"] = str(a)
                 session["b"] = str(b)
-                app.permanent_session_lifetime = timedelta(minutes=1)
+                app.permanent_session_lifetime = timedelta(minutes=30)
                 session.modified = True 
                 return redirect(url_for('questionPage'))
 
@@ -296,7 +296,7 @@ def checkTimeOut():
     inProgress = conn.execute('SELECT * FROM inProgress').fetchall()
     for record in inProgress:
         startTime = record["startTime"]
-        if((cur_time-startTime)//60 >= 1):
+        if((cur_time-startTime)//60 >= 30):
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]

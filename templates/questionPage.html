@@ -11,23 +11,24 @@
     </div>
    
     <div class="header" id="myHeader">
-        <div id="timer" class="py-2 h5">Time left: 30m 00s </div>
+        <div class="w3-container" style = "padding-bottom: 10px;">
+            <div id="timer"  style = "position: absolute;right:16px;top:0px; " class="py-2 h5" ></div></div>
 
-            <div class="question ml-sm-5 pl-sm-5 pt-2">
-                <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
-                {% if strategyId|int != 1 %}
-                    <a href="#demo" class="btn btn-info" data-toggle="collapse" onClick="javascript:toggle(this);">Click here to view explanation</a>
-                    <div id="demo" class="collapse">
-                        {% if strategyId == '6' or strategyId == '7' %}
-                            <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
-                            <div class="py-2 h5" id="explanation2"><b>Explanation2: {{explanation2}}</b></div>
-                        {% else %}
-                            <div class="py-2 h5" id="explanation"><b>Explanation: {{explanation}}</b></div>
-                        {% endif %}
-                    </div>
-                        
-                {% endif %}
-            </div>
+        <div class="question ml-sm-5 pl-sm-5 pt-2" >
+            <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
+            {% if strategyId|int != 1 %}
+                <a href="#demo"  class="btn btn-info" data-toggle="collapse" onClick="javascript:toggle(this);">Click here to view explanation</a>
+                <div id="demo" class="collapse">
+                    {% if strategyId == '6' or strategyId == '7' %}
+                        <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
+                        <div class="py-2 h5" id="explanation2"><b>Explanation2: {{explanation2}}</b></div>
+                    {% else %}
+                        <div class="py-2 h5" id="explanation"><b>Explanation: {{explanation}}</b></div>
+                    {% endif %}
+                </div>
+                    
+            {% endif %}
+        </div>
     </div>
     <div class="content">
         {% if strategyId != '1' %}
@@ -243,15 +244,15 @@
                 is hateful given the provided explanation. </span></div>  
 
                     <input type="radio" id="hatefulness1" name="hatefulness" value="1">
-                    <label for="hatefulness1">1 - Hateful</label><br>
+                    <label for="hatefulness1">1 - Non-Hateful</label><br>
                     <input type="radio" id="hatefulness2" name="hatefulness" value="2">
-                    <label for="hatefulness2">2 - Somewhat Hateful</label><br>  
+                    <label for="hatefulness2">2 - Somewhat Non-Hateful</label><br>  
                     <input type="radio" id="hatefulness3" name="hatefulness" value="3">
                     <label for="hatefulness3">3 - Neutral</label><br>
                     <input type="radio" id="hatefulness4" name="hatefulness" value="4">
-                    <label for="hatefulness4">4 - Somewhat Non-Hateful</label><br>  
+                    <label for="hatefulness4">4 - Somewhat Hateful</label><br>  
                     <input type="radio" id="hatefulness5" name="hatefulness" value="5">
-                    <label for="hatefulness5">5 - Non-Hateful</label><br><br>
+                    <label for="hatefulness5">5 - Hateful</label><br><br>
         </div>  
        
         <div class="d-flex align-items-center pt-3">
@@ -262,6 +263,9 @@
             </div>
         </div>
         <script>
+            setTimeout(() => {
+  console.log("Delayed for 1 second.");
+}, 1000)
              var countDownDate = '{{startTime}}';
             countDownDate = (parseInt(countDownDate) + 30 * 60 ) * 1000
             var x = setInterval(function() {

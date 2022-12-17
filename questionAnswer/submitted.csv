@@ -1,1 +1,3 @@
 tweetId,strategyId,annotationId,startTime,end_time,surveycode,fluency,informativeness,persuasiveness,soundness,fluency2,informativeness2,persuasiveness2,soundness2,hatefulness
+1,1,1,2022-12-16 14:39:43,2022-12-16 14:40:06,140302709094,-1,-1,-1,-1,-1,-1,-1,-1,1
+1,2,1,2022-12-16 14:41:15,2022-12-16 14:43:48,101473043316,2,2,1,3,-1,-1,-1,-1,1
