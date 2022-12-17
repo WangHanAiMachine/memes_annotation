@@ -26,3 +26,4 @@
 ### 5. Make the tweet and exp float so that users can still see them even after scrolling to the bottom of the page. Finished
 ### 6. Add link to download full version of consent form.
 ### 7. Move timmer to the top-right of the screen. Finished.
+### 8. Automatically close the question page when time out. Finished.

@@ -263,11 +263,17 @@
             </div>
         </div>
         <script>
-            setTimeout(() => {
-  console.log("Delayed for 1 second.");
-}, 1000)
-             var countDownDate = '{{startTime}}';
+            var countDownDate = '{{startTime}}';
             countDownDate = (parseInt(countDownDate) + 30 * 60 ) * 1000
+
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            setTimeout(() => {
+                window.location.replace("{{url_for('notAvaiablePage')}}");
+            }, Math.max(distance, 0) )
+            
+
             var x = setInterval(function() {
         
                 var now = new Date().getTime();

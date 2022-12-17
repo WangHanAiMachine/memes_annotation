@@ -102,8 +102,6 @@ def questionPage():
             controlQuestion = session["controlQuestion"]
 
         if request.method == 'POST':
-            # cur_time = int(time.time())
-            # if((cur_time-startTime)//60 > 1):
                 
             if("fluency" in request.form):
                 fluency = request.form["fluency"]
@@ -311,7 +309,7 @@ def get_db_connection():
     
 with app.app_context():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=30) # check
+    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=2) # check
     scheduler.start()
 
 if __name__ == "__main__":
