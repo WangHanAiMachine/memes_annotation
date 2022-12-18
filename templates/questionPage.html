@@ -22,8 +22,8 @@
         <div class="question ml-sm-5 pl-sm-5 pt-2" >
             <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
             {% if strategyId|int != 1 %}
-                <a href="#demo"  class="btn btn-info" data-toggle="collapse" onClick="javascript:toggle(this);">Click here to view explanation</a>
-                <div id="demo" class="collapse">
+                <a href="#demo"  class="btn btn-info" data-toggle="collapse" onClick="javascript:toggle(this);" aria-expanded="true">Click here to hide explanation</a>
+                <div id="demo" class="collapse show" >
                     {% if strategyId == '6' or strategyId == '7' %}
                         <div class="py-2 h5" id="explanation1"><b>Explanation1: {{explanation1}}</b></div>
                         <div class="py-2 h5" id="explanation2"><b>Explanation2: {{explanation2}}</b></div>
