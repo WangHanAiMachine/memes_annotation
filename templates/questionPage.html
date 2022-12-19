@@ -3,19 +3,13 @@
 
 <form method="Post">
 
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    {% endfor %}
 
     <div class="header" id="myHeader">
         <div class="w3-container" align="right" >
             <div id="timer"  class="py-2 h5" ></div>
         </div>
+
+        
 
         <div class="question ml-sm-5 pl-sm-5 pt-2" >
             <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
@@ -35,6 +29,14 @@
     </div>
 
     <div class="content">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
         {% if strategyId != '1' %}
             <div class="question ml-sm-5 pl-sm-5 pt-2", id="fluencyQ">
                 <div class="py-2 h5">Please rate the <b>fluency</b> of the explanation

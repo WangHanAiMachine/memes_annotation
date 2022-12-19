@@ -25,7 +25,7 @@ def consentPage():
             session["aggreement"] = aggreement
 
         if(aggreement != "yes"):
-            flash('Aggreement is required to continue the survey')
+            flash('Aggreement is required to continue the survey.')
             return redirect(url_for('consentPage'))
         else:
             if("tweetId" in session and "strategyId" in session and "annotationId" in session):
@@ -155,7 +155,7 @@ def questionPage():
 
             else:
 
-                flash('Before submitting, kindly respond to all of the questions.')
+                flash('Before submitting, please respond to all of the questions.')
                 return redirect(url_for('questionPage'))
 
         elif request.method == 'GET':
@@ -186,6 +186,7 @@ def timeOutPage():
         tweetId  = session["tweetId"]
         strategyId = session["strategyId"]
         annotationId = session["annotationId"]
+        session.clear()
         closeSurvey(tweetId, strategyId, annotationId)
     return render_template('timeOutPage.html')
 
@@ -321,7 +322,7 @@ def get_db_connection():
     
 with app.app_context():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=60) # check
+    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=30) # check
     scheduler.start()
 
 if __name__ == "__main__":
