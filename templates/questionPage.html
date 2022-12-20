@@ -2,7 +2,7 @@
 {% block content %}
 
 <form method="Post">
-    <div class="content">
+    <div class="errorMessage" style="padding-top: 16px;">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ message }}
