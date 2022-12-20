@@ -13,7 +13,7 @@ contxt_exp = pd.read_csv("questionBank/tweetContextExplanation.csv")
 
 demo_size = 1 # 90
 strategy_size = [1, 3, 7]
-annotation_size = 1 # 3
+annotation_size = 3 # 3
 
 
 
