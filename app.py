@@ -268,7 +268,10 @@ def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, flu
     startTime = datetime.datetime.fromtimestamp(int(startTime)).strftime('%Y-%m-%d %H:%M:%S')
 
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', (tweetId, strategyId, annotationId))
-    
+    conn.execute('UPDATE questionsStatus SET annotated = ?'
+                    ' WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', 
+                    (1, tweetId, strategyId, annotationId))
+
     conn.execute("INSERT INTO submitted (tweetId, strategyId, annotationId, startTime, end_time, surveycode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (tweetId, strategyId, annotationId, startTime, cur_time_format, surveyCode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness)
             )
