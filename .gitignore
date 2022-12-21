@@ -1,5 +1,3 @@
 /my_env
-/clearData.py
-/flask_ngrok.py
+clearData.py
 /questionAnswer
-debug.log
