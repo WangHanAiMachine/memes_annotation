@@ -5,6 +5,8 @@ import time, datetime
 from datetime import timedelta
 import hashlib, random
 from flask_ngrok import run_with_ngrok
+import random
+import string
   
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Rckjr43jkiubfheriuggrb34f34'
@@ -139,11 +141,10 @@ def questionPage():
             session["controlQuestion"] = controlQuestion
 
             if(checkProgress(request, strategyId)):
-                m = hashlib.md5()
-                id = (str(tweetId) + str(strategyId) + str(annotationId)).encode('utf-8')
-                m.update(id)
-                surveyCode = str(int(m.hexdigest(), 16))[0:12]
-
+                
+                surveyCode = ''.join([random.choice(string.ascii_letters
+                            + string.digits) for n in range(16)])
+                
                 session.clear()
                 if(int(controlQuestion) ==int(a) + int(b) ):
                     submitQuestion(tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
@@ -259,13 +260,18 @@ def loadQuestion(tweetId, strategyId):
     return tweet, explanation, explanation1, explanation2
 
 
-
 def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, fluency, fluency2, informativeness,\
      informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness):
     conn = get_db_connection()
     cur_time = time.time()
     cur_time_format = datetime.datetime.fromtimestamp(cur_time).strftime('%Y-%m-%d %H:%M:%S')
     startTime = datetime.datetime.fromtimestamp(int(startTime)).strftime('%Y-%m-%d %H:%M:%S')
+
+    surveyCodes = conn.execute('SELECT surveyCode FROM submitted').fetchall()
+    surveyCodes = [item[0] for item in surveyCodes]
+    while(surveyCode in surveyCodes):
+        surveyCode = ''.join([random.choice(string.ascii_letters
+                            + string.digits) for n in range(16)])
 
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', (tweetId, strategyId, annotationId))
     conn.execute('UPDATE questionsStatus SET annotated = ?'
