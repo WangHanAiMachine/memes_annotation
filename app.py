@@ -144,6 +144,14 @@ def questionPage():
                 
                 surveyCode = ''.join([random.choice(string.ascii_letters
                             + string.digits) for n in range(16)])
+                            
+                conn = get_db_connection()
+                surveyCodes = conn.execute('SELECT surveyCode FROM submitted').fetchall()
+                surveyCodes = [item[0] for item in surveyCodes]
+                while(surveyCode in surveyCodes):
+                    surveyCode = ''.join([random.choice(string.ascii_letters
+                                        + string.digits) for n in range(16)])
+                conn.close()
                 
                 session.clear()
                 if(int(controlQuestion) ==int(a) + int(b) ):
@@ -266,12 +274,6 @@ def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, flu
     cur_time = time.time()
     cur_time_format = datetime.datetime.fromtimestamp(cur_time).strftime('%Y-%m-%d %H:%M:%S')
     startTime = datetime.datetime.fromtimestamp(int(startTime)).strftime('%Y-%m-%d %H:%M:%S')
-
-    surveyCodes = conn.execute('SELECT surveyCode FROM submitted').fetchall()
-    surveyCodes = [item[0] for item in surveyCodes]
-    while(surveyCode in surveyCodes):
-        surveyCode = ''.join([random.choice(string.ascii_letters
-                            + string.digits) for n in range(16)])
 
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', (tweetId, strategyId, annotationId))
     conn.execute('UPDATE questionsStatus SET annotated = ?'

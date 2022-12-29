@@ -56,7 +56,7 @@ def calculateCorralation(var1, var2):
     var2 = np.array(var2)
     return np.corrcoef(var1, var2)[1,0]
 
-# 4 tweets consists of two types, each tweet has two annotation
+# 2 strategies , 4 tweets consists of two types, each tweet has two annotation
 # 1,1,1,2022-12-25 20:17:03,2022-12-25 20:17:18,zJbA6noP9YAO5yPi,-1,-1,-1,-1,-1,-1,-1,-1,4
 # 1,1,2,2022-12-25 20:17:23,2022-12-25 20:17:28,CepDU4Bl6LZqdn9x,-1,-1,-1,-1,-1,-1,-1,-1,3
 # 1,2,1,2022-12-25 20:17:33,2022-12-25 20:17:49,sx6w5a7CrI9AcIr7,5,4,5,4,-1,-1,-1,-1,5
