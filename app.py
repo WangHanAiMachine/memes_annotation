@@ -318,7 +318,7 @@ def checkTimeOut():
     inProgress = conn.execute('SELECT * FROM inProgress').fetchall()
     for record in inProgress:
         startTime = record["startTime"]
-        if((cur_time-startTime)//60 >= 30):
+        if((cur_time-startTime)//60 >= 15):
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]
