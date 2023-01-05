@@ -58,3 +58,9 @@ CREATE TABLE submitted (
     PRIMARY KEY (tweetId, strategyId, annotationId)
 );
 
+CREATE TABLE IF NOT EXISTS recordedUser (
+    user_id TEXT,
+    accepted INTEGER,
+    PRIMARY KEY (user_id)
+) ;
+

@@ -19,8 +19,17 @@ def consentPage():
         aggreement = session["aggreement"]
      
     if('user_id' in request.args):
-        user = request.args.get('user_id')
-        session["user_id"] = str(user)
+        user_id = request.args.get('user_id')
+        conn = get_db_connection()
+        user_ids = conn.execute('SELECT user_id FROM recordedUser').fetchall()
+        conn.close()
+        user_ids = [item[0] for item in user_ids]
+        
+        if(user_id in user_ids):
+            session.clear()
+            return redirect(url_for('multipleAccessPage'))
+        else:
+            session["user_id"] = str(user_id)
 
     if request.method == 'GET':
         return render_template('consentPage.html', aggreement = aggreement)
@@ -34,10 +43,11 @@ def consentPage():
             flash('Aggreement is required to continue the survey.')
             return redirect(url_for('consentPage'))
         else:
-            if("tweetId" in session and "strategyId" in session and "annotationId" in session):
+            if("tweetId" in session and "strategyId" in session and "annotationId" in session and "user_id" in session):
                 
                 return redirect(url_for('questionPage'))
-            else:
+            elif("user_id" in session):
+                user_id = session["user_id"]
                 tweetId, strategyId, annotationId, startTime= sampleQuestion()
                 a = random.randint(1, 10)
                 b = random.randint(1, 10)
@@ -61,6 +71,10 @@ def consentPage():
                 app.permanent_session_lifetime = timedelta(minutes=30, seconds=3) 
                 session.modified = True 
                 return redirect(url_for('questionPage'))
+            else:
+                session.clear()
+                return redirect(url_for('multipleAccessPage'))
+
 
 
 @app.route('/questionPage', methods = ['GET','POST'])
@@ -189,6 +203,10 @@ def endPage(surveyCode):
 def wrongAnswerPage():
     return render_template('wrongAnswerPage.html')
 
+@app.route('/multipleAccessPage')
+def multipleAccessPage():
+    return render_template('multipleAccessPage.html')
+
 @app.route('/notAvaiablePage')
 def notAvaiablePage():
     return render_template('notAvaiablePage.html')
@@ -278,6 +296,9 @@ def submitQuestion(user_id, tweetId, strategyId, annotationId, startTime, survey
     cur_time = time.time()
     cur_time_format = datetime.datetime.fromtimestamp(cur_time).strftime('%Y-%m-%d %H:%M:%S')
     startTime = datetime.datetime.fromtimestamp(int(startTime)).strftime('%Y-%m-%d %H:%M:%S')
+    conn.execute("INSERT INTO recordedUser (user_id, accepted ) VALUES (?, ?)",
+                (user_id,  1)
+                )
 
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', (tweetId, strategyId, annotationId))
     conn.execute('UPDATE questionsStatus SET annotated = ?'
@@ -292,7 +313,7 @@ def submitQuestion(user_id, tweetId, strategyId, annotationId, startTime, survey
 
 def closeSurvey(tweetId, strategyId, annotationId):
     conn = get_db_connection()
-    
+
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', 
                         (tweetId, strategyId, annotationId))
 
@@ -326,7 +347,7 @@ def checkTimeOut():
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]
-            
+
             closeSurvey(tweetId, strategyId, annotationId)
     conn.close()
 
