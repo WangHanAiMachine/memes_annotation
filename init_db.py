@@ -11,7 +11,7 @@ hate_exp_step = pd.read_csv("questionBank/tweetHateExplanationWithDetails.csv")
 nonhate_exp_step = pd.read_csv("questionBank/tweetNonHateExplanationWithDetails.csv")
 contxt_exp = pd.read_csv("questionBank/tweetContextExplanation.csv")
 
-demo_size = 100
+demo_size = range(75, 100)
 strategy_size = [1] 
 annotation_size = 3
 
@@ -31,7 +31,7 @@ with open('schema.sql') as f:
 
 cur = connection.cursor()
 
-for i in range(demo_size):
+for i in demo_size: # demosize
     tweet_i = tweet["Tweet"][i]
     hate_exp_wo_i = hate_exp_wo["Explanation"][i]
     nonhate_exp_wo_i = nonhate_exp_wo["Explanation"][i]
@@ -44,7 +44,7 @@ for i in range(demo_size):
                 )
     
 
-for i in range(1, demo_size + 1):
+for i in range(76, 101): # demosize
     for j in strategy_size:
         for k in range(1, annotation_size + 1):
             cur.execute("INSERT INTO questionsStatus (tweetId, strategyId, annotationId) VALUES (?, ?, ?)",
