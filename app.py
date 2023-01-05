@@ -12,20 +12,20 @@ run_with_ngrok(app)
 
 @app.route('/', methods = ['GET','POST'])
 def consentPage():
-    aggreement = "None"
-    if("aggreement" in session):
-        aggreement = session["aggreement"]
+    agreement = "None"
+    if("agreement" in session):
+        agreement = session["agreement"]
 
     if request.method == 'GET':
-        return render_template('consentPage.html', aggreement = aggreement)
+        return render_template('consentPage.html', agreement = agreement)
 
     elif request.method == 'POST':
-        if("aggreement" in request.form):
-            aggreement = request.form["aggreement"]
-            session["aggreement"] = aggreement
+        if("agreement" in request.form):
+            agreement = request.form["agreement"]
+            session["agreement"] = agreement
 
-        if(aggreement != "yes"):
-            flash('Aggreement is required to continue the survey')
+        if(agreement != "yes"):
+            flash('agreement is required to continue the survey')
             return redirect(url_for('consentPage'))
         else:
             if("tweetId" in session and "strategyId" in session and "annotationId" in session):
@@ -69,7 +69,7 @@ def questionPage():
         b = session["b"]
         if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
             session.clear()
-            return redirect(url_for('notAvaiablePage'))
+            return redirect(url_for('notAvailablePage'))
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
 
@@ -165,7 +165,7 @@ def questionPage():
                 fluency=fluency, informativeness=informativeness, persuasiveness=persuasiveness, soundness=soundness,\
                 fluency2=fluency2, informativeness2=informativeness2, persuasiveness2=persuasiveness2, soundness2=soundness2,\
                     hatefulness=hatefulness, controlQuestion=controlQuestion)
-    return redirect(url_for('notAvaiablePage'))
+    return redirect(url_for('notAvailablePage'))
 
 
 @app.route('/endPage/<surveyCode>', methods = ['GET','POST'])
@@ -176,9 +176,9 @@ def endPage(surveyCode):
 def wrongAnswerPage():
     return render_template('wrongAnswerPage.html')
 
-@app.route('/notAvaiablePage')
-def notAvaiablePage():
-    return render_template('notAvaiablePage.html')
+@app.route('/notAvailablePage')
+def notAvailablePage():
+    return render_template('notAvailablePage.html')
 
 @app.route('/timeOutPage')
 def timeOutPage():
