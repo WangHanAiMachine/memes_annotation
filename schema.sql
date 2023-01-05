@@ -37,6 +37,7 @@ CREATE TABLE inprogress (
 DROP TABLE IF EXISTS submitted;
 
 CREATE TABLE submitted (
+    user_id TEXT,
     tweetId INTEGER,
     strategyId INTEGER,
     annotationId INTEGER,

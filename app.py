@@ -17,6 +17,10 @@ def consentPage():
     aggreement = "None"
     if("aggreement" in session):
         aggreement = session["aggreement"]
+     
+    if('user_id' in request.args):
+        user = request.args.get('user_id')
+        session["user_id"] = str(user)
 
     if request.method == 'GET':
         return render_template('consentPage.html', aggreement = aggreement)
@@ -61,12 +65,14 @@ def consentPage():
 
 @app.route('/questionPage', methods = ['GET','POST'])
 def questionPage():
-    if("tweetId" in session and "strategyId" in session and "annotationId" in session):
+    if("tweetId" in session and "strategyId" in session and "annotationId" in session and "user_id" in session):
         
         tweetId  = session["tweetId"]
         strategyId = session["strategyId"]
         annotationId = session["annotationId"]
         startTime = session["startTime"]
+        user_id =  session["user_id"]
+
         a = session["a"]
         b = session["b"]
         if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
@@ -74,8 +80,6 @@ def questionPage():
             return redirect(url_for('notAvaiablePage'))
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
-
-        
 
         fluency = -1
         informativeness = -1
@@ -155,7 +159,7 @@ def questionPage():
                 
                 session.clear()
                 if(int(controlQuestion) ==int(a) + int(b) ):
-                    submitQuestion(tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
+                    submitQuestion(user_id, tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
                         informativeness, informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness)
                     return redirect(url_for('endPage', surveyCode = surveyCode))
                 else:
@@ -268,7 +272,7 @@ def loadQuestion(tweetId, strategyId):
     return tweet, explanation, explanation1, explanation2
 
 
-def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, fluency, fluency2, informativeness,\
+def submitQuestion(user_id, tweetId, strategyId, annotationId, startTime, surveyCode, fluency, fluency2, informativeness,\
      informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness):
     conn = get_db_connection()
     cur_time = time.time()
@@ -280,8 +284,8 @@ def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, flu
                     ' WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', 
                     (1, tweetId, strategyId, annotationId))
 
-    conn.execute("INSERT INTO submitted (tweetId, strategyId, annotationId, startTime, end_time, surveycode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (tweetId, strategyId, annotationId, startTime, cur_time_format, surveyCode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness)
+    conn.execute("INSERT INTO submitted (user_id, tweetId, strategyId, annotationId, startTime, end_time, surveycode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (user_id, tweetId, strategyId, annotationId, startTime, cur_time_format, surveyCode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness)
             )
     conn.commit()
     conn.close()
