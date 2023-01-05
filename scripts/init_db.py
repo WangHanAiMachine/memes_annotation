@@ -17,13 +17,13 @@ annotation_size = 3 # 3
 
 
 
-connection = sqlite3.connect('database.db')
+connection = sqlite3.connect('../database.db')
 
 with open('schema.sql') as f:
-    conn = sqlite3.connect('database.db', isolation_level=None,
+    conn = sqlite3.connect('../database.db', isolation_level=None,
                        detect_types=sqlite3.PARSE_COLNAMES)
     db_df = pd.read_sql_query("SELECT * FROM submitted", conn)
-    db_df.to_csv('questionAnswer/submitted.csv', index=False)
+    db_df.to_csv('../questionAnswer/submitted.csv', index=False)
     conn.close()
 
     connection.executescript(f.read())
