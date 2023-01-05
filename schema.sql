@@ -37,6 +37,7 @@ CREATE TABLE inprogress (
 DROP TABLE IF EXISTS submitted;
 
 CREATE TABLE submitted (
+    user_id TEXT,
     tweetId INTEGER,
     strategyId INTEGER,
     annotationId INTEGER,
@@ -56,4 +57,10 @@ CREATE TABLE submitted (
     hatefulness INTEGER NOT NULL,
     PRIMARY KEY (tweetId, strategyId, annotationId)
 );
+
+CREATE TABLE IF NOT EXISTS recordedUser (
+    user_id TEXT,
+    accepted INTEGER,
+    PRIMARY KEY (user_id)
+) ;
 

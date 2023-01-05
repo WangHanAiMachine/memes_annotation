@@ -2,7 +2,7 @@
 {% block content %}
 
 <form method="Post">
-
+    <div class="errorMessage" style="padding-top: 16px;">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ message }}
@@ -10,12 +10,15 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    {% endfor %}
+    {% endfor %}</div>
 
     <div class="header" id="myHeader">
+
         <div class="w3-container" align="right" >
             <div id="timer"  class="py-2 h5" ></div>
         </div>
+
+        
 
         <div class="question ml-sm-5 pl-sm-5 pt-2" >
             <div class="py-2 h5"><b>Tweet: {{tweet}}</b></div>
@@ -35,6 +38,8 @@
     </div>
 
     <div class="content">
+    
+    
         {% if strategyId != '1' %}
             <div class="question ml-sm-5 pl-sm-5 pt-2", id="fluencyQ">
                 <div class="py-2 h5">Please rate the <b>fluency</b> of the explanation
@@ -268,7 +273,7 @@
         </div>
         <script>
             var countDownDate = '{{startTime}}';
-            countDownDate = (parseInt(countDownDate) + 1 * 60 ) * 1000 
+            countDownDate = (parseInt(countDownDate) + 15 * 60 ) * 1000 // place
 
             var now = new Date().getTime();
             var distance = countDownDate - now;

@@ -2,15 +2,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-sm-5 my-1">
     <form method="Post"> 
-
+    <div class="content">
     {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <div class="question ml-sm-5 pl-sm-5 pt-2" >
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
     {% endfor %}
     <div class="question ml-sm-5 pl-sm-5 pt-2" >
@@ -19,10 +20,10 @@
             <br>The purpose of this study is to investigate the effectiveness and persuasiveness of large language model
              in explaining social media posts. The survey will take approximately 10 mins of your time. You will be asked 
              to complete an online survey that contains questions about the hatefulness of a Twitter tweet message and four 
-             questions about the quality of the provided explanation (if applicable). <br><br>&nbsp;Your participation in this 
+             questions about the quality of the provided explanation (if applicable). <br><br>Your participation in this 
              study is completely voluntary and you have the right to withdraw from participation at any time without giving
               any reason and penalty. You may decline to answer any survey questions, and end your participation. If you do
-               not wish to complete this survey, just close your browser and all your responses will be discarded.&nbsp;<br><br> 
+               not wish to complete this survey, just close your browser and all your responses will be discarded. You should also return the HIT.<br><br> 
             If you want to view the full version of consent form, click here to <a href="https://drive.google.com/uc?export=download&id=1x731LrBLxiHISzd7elL12f2eTh9k0ymH">download</a>.</div>
             <input type="radio" id="agreement1" name="agreement" value="yes"  >
             <label for="agreement1">Yes, I agree.</label><br>

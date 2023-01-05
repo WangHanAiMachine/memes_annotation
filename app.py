@@ -5,6 +5,8 @@ import time, datetime
 from datetime import timedelta
 import hashlib, random
 from flask_ngrok import run_with_ngrok
+import random
+import string
   
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Rckjr43jkiubfheriuggrb34f34'
@@ -15,6 +17,22 @@ def consentPage():
     agreement = "None"
     if("agreement" in session):
         agreement = session["agreement"]
+     
+    if('user_id' in request.args and 'user_id' not in session):
+        user_id = request.args.get('user_id')
+        conn = get_db_connection()
+        user_ids = conn.execute('SELECT user_id FROM recordedUser').fetchall()
+        conn.close()
+        user_ids = [item[0] for item in user_ids]
+        
+        if(user_id in user_ids):
+            session.clear()
+            return redirect(url_for('multipleAccessPage'))
+        else:
+            session["user_id"] = str(user_id)
+    elif('user_id' not in request.args and 'user_id' not in session):
+        session.clear()
+        return redirect(url_for('noUserIdPage'))
 
     if request.method == 'GET':
         return render_template('consentPage.html', agreement = agreement)
@@ -29,9 +47,9 @@ def consentPage():
             return redirect(url_for('consentPage'))
         else:
             if("tweetId" in session and "strategyId" in session and "annotationId" in session):
-                
                 return redirect(url_for('questionPage'))
             else:
+                user_id = session["user_id"]
                 tweetId, strategyId, annotationId, startTime= sampleQuestion()
                 a = random.randint(1, 10)
                 b = random.randint(1, 10)
@@ -52,19 +70,22 @@ def consentPage():
                 session["ansList2"] = ansList[1]
                 session["ansList3"] = ansList[2]
                 session["ansList4"] = ansList[3]
-                app.permanent_session_lifetime = timedelta(minutes=1, seconds=3)
+                app.permanent_session_lifetime = timedelta(minutes=30, seconds=3) 
                 session.modified = True 
                 return redirect(url_for('questionPage'))
 
 
+
 @app.route('/questionPage', methods = ['GET','POST'])
 def questionPage():
-    if("tweetId" in session and "strategyId" in session and "annotationId" in session):
+    if("tweetId" in session and "strategyId" in session and "annotationId" in session and "user_id" in session):
         
         tweetId  = session["tweetId"]
         strategyId = session["strategyId"]
         annotationId = session["annotationId"]
         startTime = session["startTime"]
+        user_id =  session["user_id"]
+
         a = session["a"]
         b = session["b"]
         if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
@@ -72,8 +93,6 @@ def questionPage():
             return redirect(url_for('notAvailablePage'))
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
-
-        
 
         fluency = -1
         informativeness = -1
@@ -139,14 +158,23 @@ def questionPage():
             session["controlQuestion"] = controlQuestion
 
             if(checkProgress(request, strategyId)):
-                m = hashlib.md5()
-                id = (str(tweetId) + str(strategyId) + str(annotationId)).encode('utf-8')
-                m.update(id)
-                surveyCode = str(int(m.hexdigest(), 16))[0:12]
+                
+                # surveyCode = ''.join([random.choice(string.ascii_letters
+                #             + string.digits) for n in range(16)])
+                            
+                # conn = get_db_connection()
+                # surveyCodes = conn.execute('SELECT surveyCode FROM submitted').fetchall()
+                # surveyCodes = [item[0] for item in surveyCodes]
+                # while(surveyCode in surveyCodes):
+                #     surveyCode = ''.join([random.choice(string.ascii_letters
+                #                         + string.digits) for n in range(16)])
+                # conn.close()
 
+                surveyCode = "TOm7JHEJZ5vbVTNk"
+                
                 session.clear()
                 if(int(controlQuestion) ==int(a) + int(b) ):
-                    submitQuestion(tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
+                    submitQuestion(user_id, tweetId, strategyId, annotationId, int(startTime), surveyCode, fluency, fluency2, \
                         informativeness, informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness)
                     return redirect(url_for('endPage', surveyCode = surveyCode))
                 else:
@@ -155,7 +183,7 @@ def questionPage():
 
             else:
 
-                flash('Before submitting, kindly respond to all of the questions.')
+                flash('Before submitting, please respond to all of the questions.')
                 return redirect(url_for('questionPage'))
 
         elif request.method == 'GET':
@@ -176,8 +204,16 @@ def endPage(surveyCode):
 def wrongAnswerPage():
     return render_template('wrongAnswerPage.html')
 
+@app.route('/multipleAccessPage')
+def multipleAccessPage():
+    return render_template('multipleAccessPage.html')
+
+@app.route('/noUserIdPage')
+def noUserIdPage():
+    return render_template('noUserIdPage.html')
+
 @app.route('/notAvailablePage')
-def notAvailablePage():
+def notAvaiablePage():
     return render_template('notAvailablePage.html')
 
 @app.route('/timeOutPage')
@@ -186,6 +222,7 @@ def timeOutPage():
         tweetId  = session["tweetId"]
         strategyId = session["strategyId"]
         annotationId = session["annotationId"]
+        session.clear()
         closeSurvey(tweetId, strategyId, annotationId)
     return render_template('timeOutPage.html')
 
@@ -258,25 +295,30 @@ def loadQuestion(tweetId, strategyId):
     return tweet, explanation, explanation1, explanation2
 
 
-
-def submitQuestion(tweetId, strategyId, annotationId, startTime, surveyCode, fluency, fluency2, informativeness,\
+def submitQuestion(user_id, tweetId, strategyId, annotationId, startTime, surveyCode, fluency, fluency2, informativeness,\
      informativeness2, persuasiveness, persuasiveness2, soundness, soundness2, hatefulness):
     conn = get_db_connection()
     cur_time = time.time()
     cur_time_format = datetime.datetime.fromtimestamp(cur_time).strftime('%Y-%m-%d %H:%M:%S')
     startTime = datetime.datetime.fromtimestamp(int(startTime)).strftime('%Y-%m-%d %H:%M:%S')
+    conn.execute("INSERT INTO recordedUser (user_id, accepted ) VALUES (?, ?)",
+                (user_id,  1)
+                )
 
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', (tweetId, strategyId, annotationId))
-    
-    conn.execute("INSERT INTO submitted (tweetId, strategyId, annotationId, startTime, end_time, surveycode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (tweetId, strategyId, annotationId, startTime, cur_time_format, surveyCode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness)
+    conn.execute('UPDATE questionsStatus SET annotated = ?'
+                    ' WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', 
+                    (1, tweetId, strategyId, annotationId))
+
+    conn.execute("INSERT INTO submitted (user_id, tweetId, strategyId, annotationId, startTime, end_time, surveycode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (user_id, tweetId, strategyId, annotationId, startTime, cur_time_format, surveyCode, fluency, informativeness, persuasiveness, soundness, fluency2, informativeness2, persuasiveness2, soundness2, hatefulness)
             )
     conn.commit()
     conn.close()
 
 def closeSurvey(tweetId, strategyId, annotationId):
     conn = get_db_connection()
-    
+
     conn.execute('DELETE FROM inprogress WHERE tweetId = ? AND strategyId = ? AND annotationId = ?', 
                         (tweetId, strategyId, annotationId))
 
@@ -306,11 +348,11 @@ def checkTimeOut():
     inProgress = conn.execute('SELECT * FROM inProgress').fetchall()
     for record in inProgress:
         startTime = record["startTime"]
-        if((cur_time-startTime)//60 >= 1):
+        if((cur_time-startTime)//60 >= 15):
             tweetId = record["tweetId"]
             strategyId = record["strategyId"]
             annotationId = record["annotationId"]
-            
+
             closeSurvey(tweetId, strategyId, annotationId)
     conn.close()
 
@@ -321,7 +363,7 @@ def get_db_connection():
     
 with app.app_context():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=60) # check
+    scheduler.add_job(func=checkTimeOut, trigger="interval", seconds=30) # check
     scheduler.start()
 
 if __name__ == "__main__":
