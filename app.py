@@ -18,7 +18,7 @@ def consentPage():
     if("aggreement" in session):
         aggreement = session["aggreement"]
      
-    if('user_id' in request.args):
+    if('user_id' in request.args and 'user_id' not in session):
         user_id = request.args.get('user_id')
         conn = get_db_connection()
         user_ids = conn.execute('SELECT user_id FROM recordedUser').fetchall()
@@ -30,6 +30,10 @@ def consentPage():
             return redirect(url_for('multipleAccessPage'))
         else:
             session["user_id"] = str(user_id)
+    elif('user_id' not in request.args and 'user_id' not in session):
+        session.clear()
+        return redirect(url_for('noUserIdPage'))
+
 
     if request.method == 'GET':
         return render_template('consentPage.html', aggreement = aggreement)
@@ -43,10 +47,9 @@ def consentPage():
             flash('Aggreement is required to continue the survey.')
             return redirect(url_for('consentPage'))
         else:
-            if("tweetId" in session and "strategyId" in session and "annotationId" in session and "user_id" in session):
-                
+            if("tweetId" in session and "strategyId" in session and "annotationId" in session):
                 return redirect(url_for('questionPage'))
-            elif("user_id" in session):
+            else:
                 user_id = session["user_id"]
                 tweetId, strategyId, annotationId, startTime= sampleQuestion()
                 a = random.randint(1, 10)
@@ -71,9 +74,6 @@ def consentPage():
                 app.permanent_session_lifetime = timedelta(minutes=30, seconds=3) 
                 session.modified = True 
                 return redirect(url_for('questionPage'))
-            else:
-                session.clear()
-                return redirect(url_for('multipleAccessPage'))
 
 
 
@@ -160,16 +160,18 @@ def questionPage():
 
             if(checkProgress(request, strategyId)):
                 
-                surveyCode = ''.join([random.choice(string.ascii_letters
-                            + string.digits) for n in range(16)])
+                # surveyCode = ''.join([random.choice(string.ascii_letters
+                #             + string.digits) for n in range(16)])
                             
-                conn = get_db_connection()
-                surveyCodes = conn.execute('SELECT surveyCode FROM submitted').fetchall()
-                surveyCodes = [item[0] for item in surveyCodes]
-                while(surveyCode in surveyCodes):
-                    surveyCode = ''.join([random.choice(string.ascii_letters
-                                        + string.digits) for n in range(16)])
-                conn.close()
+                # conn = get_db_connection()
+                # surveyCodes = conn.execute('SELECT surveyCode FROM submitted').fetchall()
+                # surveyCodes = [item[0] for item in surveyCodes]
+                # while(surveyCode in surveyCodes):
+                #     surveyCode = ''.join([random.choice(string.ascii_letters
+                #                         + string.digits) for n in range(16)])
+                # conn.close()
+
+                surveyCode = "TOm7JHEJZ5vbVTNk"
                 
                 session.clear()
                 if(int(controlQuestion) ==int(a) + int(b) ):
@@ -206,6 +208,10 @@ def wrongAnswerPage():
 @app.route('/multipleAccessPage')
 def multipleAccessPage():
     return render_template('multipleAccessPage.html')
+
+@app.route('/noUserIdPage')
+def noUserIdPage():
+    return render_template('noUserIdPage.html')
 
 @app.route('/notAvaiablePage')
 def notAvaiablePage():
