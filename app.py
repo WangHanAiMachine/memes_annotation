@@ -14,9 +14,9 @@ run_with_ngrok(app)
 
 @app.route('/', methods = ['GET','POST'])
 def consentPage():
-    aggreement = "None"
-    if("aggreement" in session):
-        aggreement = session["aggreement"]
+    agreement = "None"
+    if("agreement" in session):
+        agreement = session["agreement"]
      
     if('user_id' in request.args and 'user_id' not in session):
         user_id = request.args.get('user_id')
@@ -34,9 +34,8 @@ def consentPage():
         session.clear()
         return redirect(url_for('noUserIdPage'))
 
-
     if request.method == 'GET':
-        return render_template('consentPage.html', aggreement = aggreement)
+        return render_template('consentPage.html', agreement = agreement)
 
     elif request.method == 'POST':
         if("aggreement" in request.form):
@@ -91,7 +90,7 @@ def questionPage():
         b = session["b"]
         if(int(tweetId) < 0  or int(strategyId) < 0 or int(annotationId) < 0):
             session.clear()
-            return redirect(url_for('notAvaiablePage'))
+            return redirect(url_for('notAvailablePage'))
 
         tweet, explanation, explanation1, explanation2 = loadQuestion(int(tweetId), int(strategyId))
 
@@ -194,7 +193,7 @@ def questionPage():
                 fluency=fluency, informativeness=informativeness, persuasiveness=persuasiveness, soundness=soundness,\
                 fluency2=fluency2, informativeness2=informativeness2, persuasiveness2=persuasiveness2, soundness2=soundness2,\
                     hatefulness=hatefulness, controlQuestion=controlQuestion)
-    return redirect(url_for('notAvaiablePage'))
+    return redirect(url_for('notAvailablePage'))
 
 
 @app.route('/endPage/<surveyCode>', methods = ['GET','POST'])
@@ -213,9 +212,9 @@ def multipleAccessPage():
 def noUserIdPage():
     return render_template('noUserIdPage.html')
 
-@app.route('/notAvaiablePage')
+@app.route('/notAvailablePage')
 def notAvaiablePage():
-    return render_template('notAvaiablePage.html')
+    return render_template('notAvailablePage.html')
 
 @app.route('/timeOutPage')
 def timeOutPage():
