@@ -14,7 +14,7 @@ run_with_ngrok(app)
 
 @app.route('/', methods = ['GET','POST'])
 def consentPage():
-    agreement = "None"
+    agreement = "None" # test
     if("agreement" in session):
         agreement = session["agreement"]
      
