@@ -42,7 +42,7 @@ def consentPage():
         if("aggreement" in request.form):
             aggreement = request.form["aggreement"]
             session["aggreement"] = aggreement
-
+ 
         if(aggreement != "yes"):
             flash('Aggreement is required to continue the survey.')
             return redirect(url_for('consentPage'))
